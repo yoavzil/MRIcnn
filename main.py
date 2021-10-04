@@ -11,10 +11,10 @@ import cv2 as cv
 
 
 if __name__ == '__main__':
-    data = Brains('brain_train')
-    data.build_data()
-    data.shuffle_data()
-    data.balance_data()
+    data = Brains('brain_train')#Prepering the data for the cnn model.
+    data.build_data()           #
+    data.shuffle_data()         # 
+    data.balance_data()         #
 
     data.train_test_split()
 
@@ -24,23 +24,23 @@ if __name__ == '__main__':
     test_x = data.test_data
     test_y = data.test_lables
 
-    cnn = Cnn(data.size)
+    cnn = Cnn(data.size) #Init cnn model.
 
     for i in range(10):
-        optimizer = optim.Adam(cnn.parameters(), lr=0.00001)
-        loss_func = nn.MSELoss()
-        BATCH_SIZE = 8
-        EPOCHS = 20
+        optimizer = optim.Adam(cnn.parameters(), lr=0.00001) #Parameters for the training.
+        loss_func = nn.MSELoss()                             #
+        BATCH_SIZE = 8                                       #
+        EPOCHS = 20                                          #
 
         #training
         for e in range(EPOCHS):
             for batch in range(0, len(train_x), BATCH_SIZE):
-                batch_train = train_x[batch:batch + BATCH_SIZE]#.view(-1, 1, data.size, data.size)
+                batch_train = train_x[batch:batch + BATCH_SIZE]
                 batch_train_l = train_y[batch:batch + BATCH_SIZE]
                 cnn.zero_grad()
                 out = cnn.forward(batch_train)
-                loss = loss_func(out, batch_train_l)
-                loss.backward()
+                loss = loss_func(out, batch_train_l) #Getting the loss of the model
+                loss.backward() #Activating back propogation with that loss
                 optimizer.step()
         cnn.eval()
 
